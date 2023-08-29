@@ -12,6 +12,14 @@ const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   useEffect(() => {
+    console.log('EFFECT RUNNING');
+
+    return () => { // this clean up function runs before the useEffect function runs but not before the first time it runs!
+      console.log('EFFECT CLEANUP');
+    }; 
+  }, []); // if i had an empty array here, so no dependencies, effect would run once and the cleanup function would run when the component is removed (if im logged in)
+
+  useEffect(() => { 
     const identifier = setTimeout(() => {
       console.log("checking form validity!");
       setFormIsValid(
@@ -22,7 +30,7 @@ const Login = (props) => {
     return () => {
       // clean up function when useEffect execute the next time
       console.log("CLEAN-UP");
-      clearTimeout(identifier); // clearTimeout function built-in the browser, i clear the timer out
+      clearTimeout(identifier); // clearTimeout function built-in the browser, i clear the timer out.
     };
   }, [enteredEmail, enteredPassword]); // si nos dependances changent
 
