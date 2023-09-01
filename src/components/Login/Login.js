@@ -9,7 +9,10 @@ const emailReducer = (state, action) => {
   if (action.type === "USER_INPUT") {
     return { value: action.val, isValid: action.val.includes('@') }; // on update value et isValid when ever i receive USER_INPUT
   }
-  return { value: "", isValid: false }; // default state
+  if (action.type === "INPUT_BLUR") {
+    return { value: state.value, isValid: state.value.includes('@') }; //utilisation du dernier state que React nous fournit, donc j'aurais la derniere valeur qui a ete entré pour l'adresse courriel and et pour la validité j'utilise isValid: state.value.includes('@')
+  }
+  return { value: '', isValid: false }; // default state
 };
 
 const Login = (props) => {
@@ -22,7 +25,7 @@ const Login = (props) => {
   // premier argument, je pointe vers ma fonction (emailState), cette fonction peut etre declaré en dehors du compiosant. En deuxieme argument on met notre state initial soit: {value: "",isValid: false,} c'est notre state initial pour notre emailState snapshot
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: "",
-    isValid: false,
+    isValid: null,
   });
 
   useEffect(() => {
@@ -34,20 +37,20 @@ const Login = (props) => {
     };
   }, []); // if i had an empty array here, so no dependencies, effect would run once and the cleanup function would run when the component is removed (if im logged in)
 
-  useEffect(() => {
-    const identifier = setTimeout(() => {
-      console.log("checking form validity!");
-      setFormIsValid(
-        enteredEmail.includes("@") && enteredPassword.trim().length > 6
-      );
-    }, 500);
+  // useEffect(() => {
+  //   const identifier = setTimeout(() => {
+  //     console.log("checking form validity!");
+  //     setFormIsValid(
+  //       enteredEmail.includes("@") && enteredPassword.trim().length > 6
+  //     );
+  //   }, 500);
 
-    return () => {
-      // clean up function when useEffect execute the next time
-      console.log("CLEAN-UP");
-      clearTimeout(identifier); // clearTimeout function built-in the browser, i clear the timer out.
-    };
-  }, [enteredEmail, enteredPassword]); // si nos dependances changent
+  //   return () => {
+  //     // clean up function when useEffect execute the next time
+  //     console.log("CLEAN-UP");
+  //     clearTimeout(identifier); // clearTimeout function built-in the browser, i clear the timer out.
+  //   };
+  // }, [enteredEmail, enteredPassword]); // si nos dependances changent
 
   const emailChangeHandler = (event) => {
     // setEnteredEmail(event.target.value);
@@ -66,7 +69,8 @@ const Login = (props) => {
 
   const validateEmailHandler = () => {
     // setEmailIsValid(enteredEmail.includes("@"));
-    setEmailIsValid(enteredEmail.isValid); // utilisation de isValid pour simplifier
+    // setEmailIsValid(enteredEmail.isValid); // utilisation de isValid pour simplifier
+    dispatchEmail({type: 'INPUT_BLUR',  }); // dispatch d'une action sur validateEmailHandler egalement ici pas besoin de value
   };
 
   const validatePasswordHandler = () => {
