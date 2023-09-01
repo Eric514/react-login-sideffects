@@ -52,36 +52,43 @@ const Login = (props) => {
     };
   }, []); // if i had an empty array here, so no dependencies, effect would run once and the cleanup function would run when the component is removed (if im logged in)
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     console.log("checking form validity!");
-  //     setFormIsValid(
-  //       enteredEmail.includes("@") && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
+  const { isValid: emailIsValid } = emailState; // assignation a un alias pour la destructuration de l'objet afin de storer la valeur
+  const { isValid: passwordIsValid } = passwordState;
 
-  //   return () => {
-  //     // clean up function when useEffect execute the next time
-  //     console.log("CLEAN-UP");
-  //     clearTimeout(identifier); // clearTimeout function built-in the browser, i clear the timer out.
-  //   };
-  // }, [enteredEmail, enteredPassword]); // si nos dependances changent
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log("checking form validity!");
+      setFormIsValid(
+        // enteredEmail.includes("@") && enteredPassword.trim().length > 6
+        // emailState.isValid && passwordState.isValid
+        emailIsValid && passwordIsValid
+      );
+    }, 500);
+
+    return () => {
+      // clean up function when useEffect execute the next time
+      console.log("CLEAN-UP");
+      clearTimeout(identifier); // clearTimeout function built-in the browser, i clear the timer out.
+    };
+    // }, [enteredEmail, enteredPassword]); // si nos dependances changent
+    // }, [emailState, passwordState]);
+  }, [emailIsValid, passwordIsValid]);
 
   const emailChangeHandler = (event) => {
     // setEnteredEmail(event.target.value);
     dispatchEmail({ type: "USER_INPUT", val: event.target.value }); // val to save what user intered (a payload to this action)
-    setFormIsValid(event.target.value.includes("@") && passwordState.isValid);
+    // setFormIsValid(event.target.value.includes("@") && passwordState.isValid);
   };
 
   const passwordChangeHandler = (event) => {
     // setEnteredPassword(event.target.value);
     dispatchPassword({ type: "USER_INPUT", val: event.target.value });
 
-    setFormIsValid(
-      // enteredEmail.includes("@") && event.target.value.trim().length > 6
-      // emailState.value.includes("@") && event.target.value.trim().length > 6 // emailState.value c'est ici que l'on va stocker la valeur entrée par l'utilisateur
-      emailState.isValid && event.target.value.trim().length > 6 // utilisation de isValid pour simplifier
-    );
+    // setFormIsValid(
+    //   // enteredEmail.includes("@") && event.target.value.trim().length > 6
+    //   // emailState.value.includes("@") && event.target.value.trim().length > 6 // emailState.value c'est ici que l'on va stocker la valeur entrée par l'utilisateur
+    //   emailState.isValid && event.target.value.trim().length > 6 // utilisation de isValid pour simplifier
+    // );
   };
 
   const validateEmailHandler = () => {
