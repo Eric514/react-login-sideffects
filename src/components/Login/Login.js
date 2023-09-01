@@ -7,12 +7,12 @@ import Button from "../UI/Button/Button";
 const emailReducer = (state, action) => {
   // argument: notre last state et l'action qui etait dispatché et on return un nouveau state ici on decide de retourner un objet
   if (action.type === "USER_INPUT") {
-    return { value: action.val, isValid: action.val.includes('@') }; // on update value et isValid when ever i receive USER_INPUT
+    return { value: action.val, isValid: action.val.includes("@") }; // on update value et isValid when ever i receive USER_INPUT
   }
   if (action.type === "INPUT_BLUR") {
-    return { value: state.value, isValid: state.value.includes('@') }; //utilisation du dernier state que React nous fournit, donc j'aurais la derniere valeur qui a ete entré pour l'adresse courriel and et pour la validité j'utilise isValid: state.value.includes('@')
+    return { value: state.value, isValid: state.value.includes("@") }; //utilisation du dernier state que React nous fournit, donc j'aurais la derniere valeur qui a ete entré pour l'adresse courriel and et pour la validité j'utilise isValid: state.value.includes('@')
   }
-  return { value: '', isValid: false }; // default state
+  return { value: "", isValid: false }; // default state
 };
 
 const passwordReducer = (state, action) => {
@@ -22,7 +22,7 @@ const passwordReducer = (state, action) => {
   if (action.type === "INPUT_BLUR") {
     return { value: state.value, isValid: state.value.trim().length > 6 };
   }
-  return { value: '', isValid: false }; // default state
+  return { value: "", isValid: false }; // default state
 };
 
 const Login = (props) => {
@@ -70,6 +70,7 @@ const Login = (props) => {
   const emailChangeHandler = (event) => {
     // setEnteredEmail(event.target.value);
     dispatchEmail({ type: "USER_INPUT", val: event.target.value }); // val to save what user intered (a payload to this action)
+    setFormIsValid(event.target.value.includes("@") && passwordState.isValid);
   };
 
   const passwordChangeHandler = (event) => {
@@ -86,12 +87,12 @@ const Login = (props) => {
   const validateEmailHandler = () => {
     // setEmailIsValid(enteredEmail.includes("@"));
     // setEmailIsValid(enteredEmail.isValid); // utilisation de isValid pour simplifier
-    dispatchEmail({type: 'INPUT_BLUR',  }); // dispatch d'une action sur validateEmailHandler egalement ici pas besoin de value
+    dispatchEmail({ type: "INPUT_BLUR" }); // dispatch d'une action sur validateEmailHandler egalement ici pas besoin de value
   };
 
   const validatePasswordHandler = () => {
     // setPasswordIsValid(enteredPassword.trim().length > 6);
-    dispatchPassword({type: 'INPUT_BLUR',  });
+    dispatchPassword({ type: "INPUT_BLUR" });
   };
 
   const submitHandler = (event) => {
