@@ -1,25 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
 
+const emailReducer = (state, action) => {
+  // argument: notre last state et l'action qui etait dispatché et on return un nouveau state ici on decide de retourner un objet
+  if (action.type === "USER_INPUT") {
+    return { value: action.val, isValid: action.val.includes('@') }; // on update value et isValid when ever i receive USER_INPUT
+  }
+  return { value: "", isValid: false }; // default state
+};
+
 const Login = (props) => {
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [emailIsValid, setEmailIsValid] = useState();
+  // const [enteredEmail, setEnteredEmail] = useState("");
+  // const [emailIsValid, setEmailIsValid] = useState();
   const [enteredPassword, setEnteredPassword] = useState("");
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
-  useEffect(() => {
-    console.log('EFFECT RUNNING');
+  // premier argument, je pointe vers ma fonction (emailState), cette fonction peut etre declaré en dehors du compiosant. En deuxieme argument on met notre state initial soit: {value: "",isValid: false,} c'est notre state initial pour notre emailState snapshot
+  const [emailState, dispatchEmail] = useReducer(emailReducer, {
+    value: "",
+    isValid: false,
+  });
 
-    return () => { // this clean up function runs before the useEffect function runs but not before the first time it runs!
-      console.log('EFFECT CLEANUP');
-    }; 
+  useEffect(() => {
+    console.log("EFFECT RUNNING");
+
+    return () => {
+      // this clean up function runs before the useEffect function runs but not before the first time it runs!
+      console.log("EFFECT CLEANUP");
+    };
   }, []); // if i had an empty array here, so no dependencies, effect would run once and the cleanup function would run when the component is removed (if im logged in)
 
-  useEffect(() => { 
+  useEffect(() => {
     const identifier = setTimeout(() => {
       console.log("checking form validity!");
       setFormIsValid(
@@ -35,19 +50,23 @@ const Login = (props) => {
   }, [enteredEmail, enteredPassword]); // si nos dependances changent
 
   const emailChangeHandler = (event) => {
-    setEnteredEmail(event.target.value);
+    // setEnteredEmail(event.target.value);
+    dispatchEmail({ type: "USER_INPUT", val: event.target.value }); // val to save what user intered (a payload to this action)
   };
 
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
 
     setFormIsValid(
-      event.target.value.trim().length > 6 && enteredEmail.includes("@")
+      // enteredEmail.includes("@") && event.target.value.trim().length > 6
+      // emailState.value.includes("@") && event.target.value.trim().length > 6 // emailState.value c'est ici que l'on va stocker la valeur entrée par l'utilisateur
+      emailState.isValid && event.target.value.trim().length > 6 // utilisation de isValid pour simplifier
     );
   };
 
   const validateEmailHandler = () => {
-    setEmailIsValid(enteredEmail.includes("@"));
+    // setEmailIsValid(enteredEmail.includes("@"));
+    setEmailIsValid(enteredEmail.isValid); // utilisation de isValid pour simplifier
   };
 
   const validatePasswordHandler = () => {
@@ -56,7 +75,8 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(enteredEmail, enteredPassword);
+    // props.onLogin(enteredEmail, enteredPassword);
+    props.onLogin(emailState.value, enteredPassword); // here we want to forward the value with emailState.value et enfin dans le jsx au lieu d'avoir  emailIsValid === false ? classes.invalid : "" -> emailState.isValid === false ? classes.invalid : "" (idem pour le value dans le input)
   };
 
   return (
@@ -64,14 +84,16 @@ const Login = (props) => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailIsValid === false ? classes.invalid : ""
+            // emailIsValid === false ? classes.invalid : ""
+            emailState.isValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="email">E-Mail</label>
           <input
             type="email"
             id="email"
-            value={enteredEmail}
+            // value={enteredEmail}
+            value={emailState.value}
             onChange={emailChangeHandler}
             onBlur={validateEmailHandler}
           />
