@@ -34,10 +34,13 @@ function App() {
     <AuthContext.Provider
       value={{
         isLoggedIn: isLoggedIn,
+        onLogout: logoutHandler
+        // chaque composant qui écoute AuthContext pourra utiliser le gestionnaire de déconnexion, logoutHandler, et ce a travers la valeur du context onLogout
       }}
     >
       {/* <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} /> */}
-      <MainHeader onLogout={logoutHandler} />
+      {/* <MainHeader onLogout={logoutHandler} /> */}
+      <MainHeader />
       <main>
         {!isLoggedIn && <Login onLogin={loginHandler} />}
         {isLoggedIn && <Home onLogout={logoutHandler} />}

@@ -9,7 +9,7 @@ const Navigation = (props) => {
   return (
     <nav className={classes.nav}>
       <ul>
-        {/* {props.isLoggedIn && ( */}
+        {/* {props.isLoggedIn && ( */}  
         {ctx.isLoggedIn && (
           <li>
             <a href="/">Users</a>
@@ -24,7 +24,8 @@ const Navigation = (props) => {
         {/* {props.isLoggedIn && ( */}
         {ctx.isLoggedIn && (
           <li>
-            <button onClick={props.onLogout}>Logout</button>
+            {/* <button onClick={props.onLogout}>Logout</button> */}
+            <button onClick={ctx.onLogout}>Logout</button>
           </li>
         )}
       </ul>
