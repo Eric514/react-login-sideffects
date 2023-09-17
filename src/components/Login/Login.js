@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+import AuthContext from "../store/auth-context";
 
 const emailReducer = (state, action) => {
   // argument: notre last state et l'action qui etait dispatché et on return un nouveau state ici on decide de retourner un objet
@@ -42,6 +43,8 @@ const Login = (props) => {
     value: "",
     isValid: null,
   });
+
+  const authCtx = useContext(AuthContext);
 
   useEffect(() => {
     console.log("EFFECT RUNNING");
@@ -105,7 +108,7 @@ const Login = (props) => {
   const submitHandler = (event) => {
     event.preventDefault();
     // props.onLogin(enteredEmail, enteredPassword);
-    props.onLogin(emailState.value, passwordState.value); // here we want to forward the value with emailState.value et enfin dans le jsx au lieu d'avoir  emailIsValid === false ? classes.invalid : "" -> emailState.isValid === false ? classes.invalid : "" (idem pour le value dans le input)
+    authCtx.onLogin(emailState.value, passwordState.value); // here we want to forward the value with emailState.value et enfin dans le jsx au lieu d'avoir  emailIsValid === false ? classes.invalid : "" -> emailState.isValid === false ? classes.invalid : "" (idem pour le value dans le input)
   };
 
   return (
