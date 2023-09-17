@@ -3,7 +3,8 @@ import React, { useContext } from "react";
 import classes from "./Navigation.module.css";
 import AuthContext from "../store/auth-context";
 
-const Navigation = (props) => {
+// const Navigation = (props) => {
+  const Navigation = () => {
   // utilisation de useConext pointant vers AuthContext. Je stock la valeur du context dans ctx
   const ctx = useContext(AuthContext);
   return (
