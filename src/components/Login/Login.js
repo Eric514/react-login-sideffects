@@ -53,7 +53,7 @@ const Login = (props) => {
 
   const authCtx = useContext(AuthContext);
 
-  const emailInputRef = useRef(); // un e reference pour le courriel et une reference pour le mdp puis ajout du Ref Input dans le jsx
+  const emailInputRef = useRef(); // une reference pour le courriel et une reference pour le mdp puis ajout du Ref Input dans le jsx
   const passwordInputRef = useRef();
 
   useEffect(() => {
@@ -121,9 +121,9 @@ const Login = (props) => {
     if (formIsValid) {
       authCtx.onLogin(emailState.value, passwordState.value); // here we want to forward the value with emailState.value et enfin dans le jsx au lieu d'avoir  emailIsValid === false ? classes.invalid : "" -> emailState.isValid === false ? classes.invalid : "" (idem pour le value dans le input)
     } else if (!emailIsValid) {
-      emailInputRef.current.activate(); // focus sur le courriel
+      emailInputRef.current.focus(); // focus sur le courriel
     } else {
-      passwordInputRef.current.activate(); // focus sur le mdp
+      passwordInputRef.current.focus(); // focus sur le mdp
     }
   };
 
