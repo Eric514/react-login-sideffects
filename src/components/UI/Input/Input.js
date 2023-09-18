@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import classes from "./Input.module.css";
 
 const Input = (props) => {
+  const inputRef = useRef();
+
+  const activate = () => {
+    // inputRef.current.focus();
+    inputRef.current.focus({ preventScroll: true });
+  };
+
   return (
     <div
       className={`${classes.control} ${
